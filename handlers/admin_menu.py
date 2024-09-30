@@ -25,15 +25,15 @@ async def get_admin_kb(message: Message):
 @admin_router.message(Command(commands=['stop', 'stat', 'log']), IsAdmin(admins))
 async def admin_menu(message: Message, command: CommandObject):
     if command.text == '/stop':
-        logger.info('/stop')
+        logger.warning('/stop')
         await dp.stop_polling()
         await bot.close()
         await exit(0)
     elif command.text == '/stat':
-        logger.info('/stat')
+        logger.warning('/stat')
     elif command.text == '/log':
-        logger.info('/log')
+        logger.warning('/log')
     else:
-        logger.info('missed command')
+        logger.error('missed command')
     msg = await message.answer('Удаляю...', reply_markup=ReplyKeyboardRemove())
     await msg.delete()
