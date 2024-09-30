@@ -1,6 +1,6 @@
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command, CommandObject
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardRemove
 from keyboards.all_kb import main_kb, mini_kb, private_kb
 
 start_router = Router()
@@ -29,7 +29,7 @@ async def menu(message: Message):
                          reply_markup=main_kb(message.from_user.id))
 
 @start_router.message(Command('user_menu'))
-async def menu(message: Message):
+async def user_menu(message: Message):
     await message.answer('Выбери действие:',
                          reply_markup=private_kb(message.from_user.id))
 
@@ -38,6 +38,10 @@ async def menu2(message: Message):
     await message.answer('Выбери действие:',
                          reply_markup=mini_kb(message.from_user.id))
 
+@start_router.message(F.text)
+async def remove_kb(message: Message):
+    msg = await message.answer(str(None), reply_markup=ReplyKeyboardRemove())
+    await msg.delete()
 
 #@start_router.message(F.text == '/start_3')
 #async def cmd_start_3(message: Message):
