@@ -1,7 +1,10 @@
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.types import Message, ReplyKeyboardRemove
-from keyboards.all_kb import main_kb, mini_kb, private_kb
+
+from create_bot import admins, dp, logger
+from filters.is_admin import IsAdmin
+from keyboards.all_kb import main_kb, mini_kb, private_kb, admin_kb
 
 start_router = Router()
 
@@ -18,29 +21,27 @@ async def who_am_i(message: Message):
     text = ''
     user = message.from_user
     if user.username: text += f"YOU: @{user.username} "
-    if user.last_name: text += f"YOUR NAME: {user.first_name} {user.last_name} "
+    if user.last_name: text += f"YOUR NAME: {user.full_name} "
     else: text += f"YOUR NAME: {user.first_name} "
     text += f"YOUR ID: {user.id}"
-    await message.answer(text)
+    await message.reply(text)
 
 @start_router.message(Command('menu'))
 async def menu(message: Message):
-    await message.answer('Выбери действие:',
-                         reply_markup=main_kb(message.from_user.id))
-
-@start_router.message(Command('user_menu'))
-async def user_menu(message: Message):
-    await message.answer('Выбери действие:',
-                         reply_markup=private_kb(message.from_user.id))
+    if message.chat.type == 'private':
+        kb=private_kb(message.from_user.id)
+    else:
+        kb=main_kb(message.from_user.id)
+    await message.answer('Даём меню...', reply_markup=kb)
 
 @start_router.message(Command('inline_menu'))
-async def menu2(message: Message):
+async def inline_menu(message: Message):
     await message.answer('Выбери действие:',
-                         reply_markup=mini_kb(message.from_user.id))
+                         reply_markup=mini_kb())
 
-@start_router.message(F.text)
+@start_router.message(F.text.in_({'Кнопка 1', 'Кнопка 2', 'Кнопка 3', 'Кнопка 4'}))
 async def remove_kb(message: Message):
-    msg = await message.answer(str(None), reply_markup=ReplyKeyboardRemove())
+    msg = await message.answer('Удаляю...', reply_markup=ReplyKeyboardRemove())
     await msg.delete()
 
 #@start_router.message(F.text == '/start_3')

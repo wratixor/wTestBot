@@ -9,7 +9,7 @@ from db_handlers.db_class import PostgresHandler
 
 #pg_db = PostgresHandler(config('PG_LINK'))
 scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
-admins = [int(admin_id) for admin_id in config('ADMINS').split(',')]
+admins = set(int(admin_id) for admin_id in config('ADMINS').split(','))
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
