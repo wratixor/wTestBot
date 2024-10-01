@@ -12,7 +12,7 @@ admin_router = Router()
 
 @admin_router.message(F.text == '⚙️ Админка', IsAdmin(admins))
 async def get_admin_kb(message: Message):
-    await message.answer('Привет, админ!', reply_markup=admin_kb())
+    await message.reply('Привет, админ!', reply_markup=admin_kb())
 
 @admin_router.message(F.text == '🔙 Назад', IsAdmin(admins))
 async def get_admin_kb(message: Message):
@@ -20,12 +20,13 @@ async def get_admin_kb(message: Message):
         kb=private_kb(message.from_user.id)
     else:
         kb=main_kb(message.from_user.id)
-    await message.answer('Пока, админ!', reply_markup=kb)
+    await message.reply('Пока, админ!', reply_markup=kb)
 
 @admin_router.message(Command(commands=['stop', 'stat', 'log']), IsAdmin(admins))
 async def admin_menu(message: Message, command: CommandObject):
     if command.text == '/stop':
         logger.warning('/stop')
+        await message.reply('Бот выключается...', reply_markup=ReplyKeyboardRemove())
         await dp.stop_polling()
         await bot.close()
         await exit(0)
