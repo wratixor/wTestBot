@@ -1,4 +1,4 @@
-drop table if exists rmaster.zmtd_year;
+drop table if exists rmaster.zmtd_year cascade;
 CREATE TABLE rmaster.zmtd_year (
 	year_gid integer NOT NULL,
 	prev_year_gid integer NOT NULL,
@@ -23,7 +23,7 @@ select gs as year_gid
 
 -- select * from zmtd_year;
 
-drop SEQUENCE if exists rmaster.zmtd_entity_sq;
+drop SEQUENCE if exists rmaster.zmtd_entity_sq cascade;
 CREATE SEQUENCE rmaster.zmtd_entity_sq
 INCREMENT 1
 START 100
@@ -31,7 +31,7 @@ MINVALUE 100
 MAXVALUE 2147483647
 CACHE 1;
 
-drop table if exists rmaster.zmtd_entity;
+drop table if exists rmaster.zmtd_entity cascade;
 create table rmaster.zmtd_entity (
 	entity_gid integer NOT NULL DEFAULT nextval('zmtd_entity_sq'::regclass),
 	table_name varchar(64) not NULL,
@@ -52,7 +52,7 @@ insert into rmaster.zmtd_entity (table_name, field_name, description) values
 
 -- select * from zmtd_entity;
 
-drop SEQUENCE if exists rmaster.zmtd_flag_sq;
+drop SEQUENCE if exists rmaster.zmtd_flag_sq cascade;
 CREATE SEQUENCE rmaster.zmtd_flag_sq
 INCREMENT 1
 START 500
@@ -60,7 +60,7 @@ MINVALUE 500
 MAXVALUE 2147483647
 CACHE 1;
 
-drop table if exists rmaster.zmtd_flag;
+drop table if exists rmaster.zmtd_flag cascade;
 create table rmaster.zmtd_flag (
 	flag_gid integer NOT NULL DEFAULT nextval('zmtd_flag_sq'::regclass),
 	code integer not NULL,
@@ -102,7 +102,7 @@ insert into rmaster.zmtd_flag (code, value, entity_gid, description) values
 
 -- select * from zmtd_flag;
 
-drop table if exists rmaster.zmtd_month;
+drop table if exists rmaster.zmtd_month cascade;
 CREATE TABLE rmaster.zmtd_month (
 	month_gid integer NOT NULL,
 	prev_month_gid integer NOT NULL,
@@ -144,7 +144,7 @@ from zmtd_month as m
 join zmtd_flag as zm on zm.flag_gid = m.month_name_gid;
 */
 
-drop table if exists rmaster.zmtd_date;
+drop table if exists rmaster.zmtd_date cascade;
 CREATE TABLE rmaster.zmtd_date (
     date_gid date NOT NULL,
     prev_date_gid date not null,
@@ -263,7 +263,7 @@ update ZMTD_DATE set holiday_flg = 504, DAY_OFF_FLG = 500 where DATE_GID in (
 */ -- datafiks 2025 end
 
 
-drop table if exists rmaster.staff;
+drop table if exists rmaster.staff cascade;
 CREATE TABLE rmaster.staff (
     user_id bigint NOT NULL,
     first_name varchar(64) not null,
@@ -272,12 +272,13 @@ CREATE TABLE rmaster.staff (
     visible_name varchar(64) not null,
     ref_id bigint null,
     phone varchar(32) null,
+    color bytea not null default ('\x'||to_hex((TRUNC(RANDOM() * 200)::int % 200) + 50)||to_hex((TRUNC(RANDOM() * 200)::int % 200) + 50)||to_hex((TRUNC(RANDOM() * 200)::int % 200) + 50))::bytea,
     start_date timestamptz not null default now(),
     update_date timestamptz not null default now(),
 	CONSTRAINT "staff$pk" PRIMARY KEY (user_id)
 );
 
-drop table if exists rmaster.department;
+drop table if exists rmaster.department cascade;
 CREATE TABLE rmaster.department (
     chat_id bigint NOT NULL,
     chat_type varchar(64) not null,
@@ -288,7 +289,7 @@ CREATE TABLE rmaster.department (
 	CONSTRAINT "department$pk" PRIMARY KEY (chat_id)
 );
 
-drop table if exists rmaster.staff_department;
+drop table if exists rmaster.staff_department cascade;
 CREATE TABLE rmaster.staff_department (
     user_id bigint references staff(user_id),
     chat_id bigint references department(chat_id),
@@ -298,7 +299,7 @@ CREATE TABLE rmaster.staff_department (
 	CONSTRAINT "staff_department$pk" PRIMARY KEY (chat_id, user_id)
 );
 
-drop SEQUENCE if exists rmaster.vacation_sq;
+drop SEQUENCE if exists rmaster.vacation_sq cascade;
 CREATE SEQUENCE rmaster.vacation_sq
 INCREMENT 1
 START 100
@@ -306,7 +307,7 @@ MINVALUE 100
 MAXVALUE 9223372036854775807
 CACHE 1;
 
-drop table if exists rmaster.vacation;
+drop table if exists rmaster.vacation cascade;
 CREATE TABLE rmaster.vacation (
     vacation_gid bigint NOT NULL DEFAULT nextval('vacation_sq'::regclass),
     user_id bigint references staff(user_id),
