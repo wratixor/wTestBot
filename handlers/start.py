@@ -1,10 +1,9 @@
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.types import Message, ReplyKeyboardRemove
+from keyboards.all_kb import main_kb, mini_kb, private_kb
 
-from create_bot import admins, dp, logger
-from filters.is_admin import IsAdmin
-from keyboards.all_kb import main_kb, mini_kb, private_kb, admin_kb
+
 
 start_router = Router()
 

@@ -28,20 +28,20 @@ async def set_private_comads():
 async def start_bot():
     logger.warning('Bot running')
     bn = await bot.get_my_name()
-    try:
-        for admin_id in admins:
+    for admin_id in admins:
+        try:
             await bot.send_message(admin_id, f'{bn.name} запущен! 🥳')
-    except Exception as e:
-        logger.error(f'start_bot(): {e}')
+        except Exception as e:
+            logger.error(f'start_bot(): {e}')
 
 async def stop_bot():
     logger.warning('Bot stopping')
     bn = await bot.get_my_name()
-    try:
-        for admin_id in admins:
+    for admin_id in admins:
+        try:
             await bot.send_message(admin_id, f'{bn.name} остановлен. За что? 😔')
-    except Exception as e:
-        logger.error(f'stop_bot(): {e}')
+        except Exception as e:
+            logger.error(f'stop_bot(): {e}')
 
 async def main():
     # scheduler.add_job(send_time_msg, 'interval', seconds=10)

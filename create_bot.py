@@ -9,7 +9,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from db_handlers.db_class import PostgresHandler
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 
 #pg_db = PostgresHandler(config('PG_LINK'))
 storage = RedisStorage.from_url(config('REDIS_LINK'))
