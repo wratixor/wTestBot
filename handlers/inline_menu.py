@@ -8,7 +8,12 @@ inline_router = Router()
 async def process_buttons_press(callback: CallbackQuery):
     #await callback.answer()
     await callback.message.edit_text(
-        text='Ты - ' + callback.from_user.full_name + ' жмакнул: ' + callback.data
-             + ' в чатике: "' + callback.message.chat.full_name + '" у сообщения №' + str(callback.message.message_id),
+        text=f'Ты - {callback.from_user.full_name}'
+             f' жмакнул: {callback.data} в чатике: '
+             f'"{callback.message.chat.full_name}"'
+             f' у сообщения №{callback.message.message_id} '
+             f'uid={callback.from_user.id} '
+             f'grid={callback.message.chat.id} '
+             f'type={callback.message.chat.type}',
         reply_markup=callback.message.reply_markup
     )
